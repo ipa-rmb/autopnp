@@ -3,10 +3,12 @@
     The autopnp stack contains packages developed in the scope of the AutoPnP research project whose goal is to enable a mobile service robot like Care-O-bot 3 to clean a dirty floor.
   </description>
   <author>Richard Bormann</author>
-  <license>LGPL, Fraunhofer IPA</license>  
+  <license>LGPL</license>  
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/autopnp</url>
-  <depend stack="common_msgs" /> <!-- sensor_msgs -->
+  <depend stack="cob_navigation" /> <!-- cob_navigation_global -->
+  <depend stack="cob_scenario_states" /> <!-- cob_generic_states_experimental -->
+  <depend stack="common_msgs" /> <!-- nav_msgs, sensor_msgs -->
   <depend stack="image_common" /> <!-- image_transport -->
   <depend stack="perception_pcl" /> <!-- pcl, pcl_ros -->
   <depend stack="ros" />

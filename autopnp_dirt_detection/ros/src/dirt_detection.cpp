@@ -154,7 +154,6 @@ int main(int argc, char **argv)
 
 	DirtDetection id(n);
 	id.init();
-
 /*
 	printf("Read samples and split them into train-samples and test-samples.\n");
 	std::vector<DirtDetection::CarpetFeatures> carp_feat_vec;
@@ -1025,7 +1024,10 @@ bool DirtDetection::planeSegmentation(pcl::PointCloud<pcl::PointXYZRGB>::Ptr inp
 			pcl::PointXYZRGB point = (*filtered_input_cloud)[(inliers->indices[inliers->indices.size()/2])];
 			btVector3 planePointCamera(point.x, point.y, point.z);
 			btVector3 planePointWorld = transform_map_camera * planePointCamera;
-			//std::cout << "normCam: " << planeNormalCamera.getX() << ", " << planeNormalCamera.getY() << ", " << planeNormalCamera.getZ() << "  normW: " << planeNormalWorld.getX() << ", " << planeNormalWorld.getY() << ", " << planeNormalWorld.getZ() << "   point[half]: " << planePointWorld.getX() << ", " << planePointWorld.getY() << ", " << planePointWorld.getZ() << std::endl;
+//			std::cout << "normCam: " << planeNormalCamera.getX() << ", " << planeNormalCamera.getY() << ", " << planeNormalCamera.getZ() << "  normW: " << planeNormalWorld.getX() << ", " << planeNormalWorld.getY() << ", " << planeNormalWorld.getZ() << "   point[half]: " << planePointWorld.getX() << ", " << planePointWorld.getY() << ", " << planePointWorld.getZ() << std::endl;
+//			std::cout << "pointCount: " << inliers->indices.size() << " minPlanePoints: " << minPlanePoints_ << "\n"
+//					<< "planeNormalWorld.getZ(): " << planeNormalWorld.getZ() << " planeNormalMaxZ_: " << planeNormalMaxZ_ << "\n"
+//					<< "abs(planePointWorld.getZ()): " << abs(planePointWorld.getZ()) << " planeMaxHeight_: " << planeMaxHeight_ << std::endl;
 
 			// verify that the found plane is a valid ground plane
 			if (inliers->indices.size()>minPlanePoints_ && planeNormalWorld.getZ()<planeNormalMaxZ_ && abs(planePointWorld.getZ())<planeMaxHeight_)

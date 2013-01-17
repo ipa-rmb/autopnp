@@ -5,7 +5,7 @@
 
   </description>
   <author>Richard Bormann</author>
-  <license>LGPL, Fraunhofer IPA</license>
+  <license>LGPL</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/autopnp_dirt_detection</url>
   <depend package="pcl"/>
