@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- args -->
+  <arg name="robot" value="cob3-6"/>
+  <arg name="pc1" default="$(arg robot)-pc1"/>
+  <arg name="pc2" default="$(arg robot)-pc2"/>
+  <arg name="pc3" default="$(arg robot)-pc3"/>
+  
+  <group>
+    <machine name="pc1" address="$(arg pc1)" default="true"/>
+    
+    <!-- start navigation -->
+    <include file="$(find cob_navigation_global)/launch/2dnav_ros_dwa.launch" >
+      <arg name="map" value="$(find autopnp_scenario)/config/map-ipa-apartment.yaml" />
+    </include>
+  
+  </group>
+
+</launch>

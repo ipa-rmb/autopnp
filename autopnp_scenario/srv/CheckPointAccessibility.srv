@@ -1,3 +1,0 @@
-geometry_msgs/Pose2D[] points_to_check    # array of points which should be checked for accessibility
----
-bool[] accessibility_flags    			  # array of booleans which correspond to the points and define accessibility (true=free, false=obstacle)

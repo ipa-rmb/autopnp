@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- send parameters to parameter server -->
+  <rosparam command="load" ns="inspect_room_parameter" file="$(find autopnp_scenario)/ros/launch/inspect_room.yaml"/>
+
+  <!--  -->
+  <node pkg="autopnp_scenario" type="inspect_room_action_server" name="inspect_room" output="screen"/>	
+
+</launch>

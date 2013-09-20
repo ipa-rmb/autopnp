@@ -11,17 +11,41 @@
 		<machine name="pc1" address="$(arg pc1)" default="true"/>
 
 		<!-- start navigation -->
-		<include file="$(find cob_navigation_global)/launch/2dnav_ros_dwa.launch" >
-			<arg name="map" value="$(find autopnp_scenario)/config/map.yaml" />
-		</include>
+		<!--include file="$(find cob_navigation_global)/launch/2dnav_ros_dwa.launch" >
+			<arg name="map" value="$(find autopnp_scenario)/config/map-ipa-apartment.yaml" />
+		</include-->
+
+		<!-- start map_segmentation_action_server -->
+		<include file="$(find autopnp_scenario)/ros/launch/map_segmentation_action_server.launch"/>
+
+		<!-- start find_next_unprocessed_room_action_server -->
+		<node name="find_next_unprocessed_room" pkg="autopnp_scenario" type="find_next_unprocessed_room_action_server" output="screen" />
+
+		<!-- start go_to_room_location_action_server -->
+		<node name="go_to_room_location" pkg="autopnp_scenario" type="go_to_room_location_action_server" output="screen" />
+
+		<!-- start random_location_finder_action_server -->
+		<include file="$(find autopnp_scenario)/ros/launch/random_location_finder_action_server.launch"/>
+
+		<!-- start inspect_room_action_server -->
+		<include file="$(find autopnp_scenario)/ros/launch/inspect_room_action_server.launch"/>
+
+		<!-- start map_accessibility_analysis -->
+		<include file="$(find cob_map_accessibility_analysis)/ros/launch/map_accessibility_analysis.launch"/>
 
 	</group>
 
 	<group>
 		<machine name="pc2" address="$(arg pc2)" default="true"/>
+		
+		<!-- start trash bin detection -->
+		<include file="$(find autopnp_scenario)/ros/launch/trash_bin_detection_service_server.launch"/>
 
+		<!-- start detect_trash_bin_again -->
+ 		<node name="detect_trash_bin_again" pkg="autopnp_scenario" type="detect_fiducials_service_server" output="screen" />
+ 		
 		<!-- start dirt detection -->
-		<!--include file="$(find autopnp_dirt_detection)/ros/launch/dirt_detection.launch" /-->
+		<include file="$(find autopnp_dirt_detection)/ros/launch/dirt_detection.launch" />
 
 	</group>
 

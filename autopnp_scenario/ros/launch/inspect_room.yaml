@@ -1,0 +1,15 @@
+# step_size_to_find_accessible_points_of_the_room_->
+# 1. This variable is depends on choice of the user
+# 2. Lower step size will provide more frequent points
+#    to observe inside a room.Lowest Limit should be
+#    greater or equal to (robot_radius_).
+#    If the lower limit is < (robot_radius_)
+#    then you may get some extra points which the robot 
+#    has already visited.  
+# 3. Higher step size will give you less observation 
+#    points. 	  
+# 4. good selection of value will be 2*(robot_radius_) in meter	  
+#
+# Here we choose the value 1 meter
+
+step_size_to_find_accessible_points_of_the_room_check_: 1

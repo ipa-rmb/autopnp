@@ -29,6 +29,8 @@
 #include <message_filters/synchronizer.h>
 #include <message_filters/time_synchronizer.h>
 
+#include <cob_map_accessibility_analysis/CheckPointAccessibility.h>
+
 #define PI 3.14159265
 
 struct Pose

@@ -1,17 +1,25 @@
-#goal definition
-sensor_msgs/Image input_img
-float64 map_resolution
-float64 Map_Origin_x
-float64 Map_Origin_y
-int32[] room_number
-int32[] room_min_x
-int32[] room_max_x
-int32[] room_min_y
-int32[] room_max_y
-int32[] room_center_x
-int32[] room_center_y
+# Inspect Room action
+#-> Provides interface to get accessible points
+#   of the room to visit.
+#-> input interface/msg format for action client
+#	which is required by action server to process
+#-> output interface/msg format to get the image
+#	and necessary data 
+
+#+++++++++++++++++++++++++++++++++++++++++goal definition++++++++++++++++++++++++++++++++++++++++++++++
+sensor_msgs/Image input_img				# input map to check the accessible point
+float64 map_resolution					# map resolution of the supplied map in meter
+float64 map_origin_x					# x coordinate of origin of the supplied map in meter
+float64 map_origin_y					# y coordinate of origin of the supplied map in meter
+int32[] room_number						# total room number of the supplied map
+int32[] room_min_x						# the minimum x-coordinate value of the room in pixel.
+int32[] room_max_x						# the maximum x-coordinate value of the room in pixel.
+int32[] room_min_y						# the minimum y-coordinate value of the room in pixel.
+int32[] room_max_y						# the maximum y-coordinate value of the room in pixel.
+int32[] room_center_x					# x coordinate of center of each room of the supplied map in pixel
+int32[] room_center_y					# y coordinate of center of each room of the supplied map in pixel
 ---
-#result definition
-sensor_msgs/Image output_img
+#+++++++++++++++++++++++++++++++++++++++++result definition++++++++++++++++++++++++++++++++++++++++++++
+sensor_msgs/Image output_img			# return the map after processing a room and set the room as processed
 ---
 #feedback definition

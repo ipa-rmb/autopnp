@@ -9,7 +9,7 @@
 #include <sensor_msgs/image_encodings.h>
 
 #include <actionlib/server/simple_action_server.h>
-#include <autopnp_scenario/AnalyzeMapAction.h>
+#include <autopnp_scenario/MapSegmentationAction.h>
 
 #include <autopnp_scenario/exploration_algorithm_action_server_library.h>
 
@@ -18,10 +18,10 @@ class Analyze_Map_Server
 	{
 		protected:
 			ros::NodeHandle nh_;
-			actionlib::SimpleActionServer<autopnp_scenario::AnalyzeMapAction> ams_;
+			actionlib::SimpleActionServer<autopnp_scenario::MapSegmentationAction> ams_;
 			std::string action_name_;
-			autopnp_scenario::AnalyzeMapFeedback feedback_;
-			autopnp_scenario::AnalyzeMapResult result_;
+			autopnp_scenario::MapSegmentationFeedback feedback_;
+			autopnp_scenario::MapSegmentationResult result_;
 
 		public:
 			Exploration exploration_obj;
@@ -34,12 +34,12 @@ class Analyze_Map_Server
 
 			~Analyze_Map_Server(void){}
 
-			void executeCB(const autopnp_scenario::AnalyzeMapGoalConstPtr &goal)
+			void executeCB(const autopnp_scenario::MapSegmentationGoalConstPtr &goal)
 				{
 					ros::Rate r(1);
 
 					cv_bridge::CvImagePtr cv_ptr;
-					cv_ptr = cv_bridge::toCvCopy(goal->input_img, sensor_msgs::image_encodings::MONO8);
+					cv_ptr = cv_bridge::toCvCopy(goal->input_map, sensor_msgs::image_encodings::MONO8);
 					cv::Mat original_img;
 					original_img = cv_ptr->image;
 
@@ -53,17 +53,17 @@ class Analyze_Map_Server
 					cv_image.header.stamp = ros::Time::now();
 					cv_image.encoding = "mono8";
 					cv_image.image = Segmented_map;
-					cv_image.toImageMsg(result_.output_img);
+					cv_image.toImageMsg(result_.output_map);
 
-					result_.room_center_x = exploration_obj.get_Center_of_Room_x();
-					result_.room_center_y = exploration_obj.get_Center_of_Room_y();
+					result_.room_center_x_in_pixel = exploration_obj.get_Center_of_Room_x();
+					result_.room_center_y_in_pixel = exploration_obj.get_Center_of_Room_y();
 					result_.map_resolution = goal->map_resolution;
-					result_.Map_Origin_x = goal->Map_Origin_x;
-					result_.Map_Origin_y = goal->Map_Origin_y;
-					result_.room_min_x = exploration_obj.get_room_min_x();
-					result_.room_min_y = exploration_obj.get_room_min_y();
-					result_.room_max_x = exploration_obj.get_room_max_x();
-					result_.room_max_y = exploration_obj.get_room_max_y();
+					result_.map_origin_x = goal->map_origin_x;
+					result_.map_origin_y = goal->map_origin_y;
+					result_.room_min_x_in_pixel = exploration_obj.get_room_min_x();
+					result_.room_min_y_in_pixel = exploration_obj.get_room_min_y();
+					result_.room_max_x_in_pixel = exploration_obj.get_room_max_x();
+					result_.room_max_y_in_pixel = exploration_obj.get_room_max_y();
 
 					exploration_obj.get_Center_of_Room_x().clear();
 					exploration_obj.get_Center_of_Room_y().clear();
@@ -80,7 +80,7 @@ class Analyze_Map_Server
 
 int main(int argc,char** argv)
 	{
-		ros::init(argc,argv,"Analyze_Map");
+		ros::init(argc,argv,"segment_map");
 
 		Analyze_Map_Server AMS(ros::this_node::getName());
 

@@ -20,6 +20,7 @@
   <depend package="cob_navigation_global"/>
   <depend package="cob_generic_states_experimental"/>
   <depend package="cob_trajectory_controller"/>
+  <depend package="cob_map_accessibility_analysis"/>
 
 </package>
 

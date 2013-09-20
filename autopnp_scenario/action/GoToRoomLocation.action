@@ -1,0 +1,23 @@
+# Go To Room Location Action->
+#-> Provides interface to move the base to next nearest 
+#   unprocessed room from current robot location.
+#-> input interface/msg format for action client
+#	which is required by action server to process
+#-> output interface/msg format to get the next
+#	goal pose for move base	 
+# ->The input map can be obtained from 
+# 	1. find next unprocessed room action server 	
+
+#+++++++++++++++++++++++++++++++++++++goal definition++++++++++++++++++++++++++++++++++++++++++++++++++
+sensor_msgs/Image input_img				# input map from find next unprocessed room action server to check the robot location inside the room or not
+float64 map_resolution					# map resolution of the supplied map in meter
+float64 map_origin_x					# x coordinate of origin of the supplied map in meter
+float64 map_origin_y					# y coordinate of origin of the supplied map in meter
+int32 room_center_position_x			# x coordinate of the center of room of the supplied map in pixel
+int32 room_center_position_y			# y coordinate of the center of room of the supplied map in pixel
+---
+#+++++++++++++++++++++++++++++++++++++result definition+++++++++++++++++++++++++++++++++++++++++++++++++
+string output_flag						# output flag,a value->"True" means robot is inside of the desired room
+										#					   "False" means robot is not inside of the desired room
+---
+#feedback definition

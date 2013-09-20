@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- send parameters to parameter server -->
+  <!--rosparam command="load" ns="random_location_finder_parameter" file="$(find autopnp_scenario)/ros/launch/random_location_finder.yaml"/-->
+
+  <!--  -->
+  <node pkg="autopnp_scenario" type="random_location_finder_action_server" name="random_location_finder" output="screen"/>	
+
+</launch>

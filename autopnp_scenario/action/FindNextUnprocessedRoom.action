@@ -1,0 +1,25 @@
+# Find Next Unprocessed Room Action->
+#-> Provides interface to get the next nearest 
+#   unprocessed room from current robot location.
+#-> input interface/msg format for action client
+#	which is required by action server to process
+#-> output interface/msg format to get the next
+#	unprocessed room	 
+# ->The input map can be obtained from 
+# 	1. map segmentation server for the first time
+# 	2. after that from inspect room action server
+
+#+++++++++++++++++++++++++++++++++++++goal definition++++++++++++++++++++++++++++++++++++++++++++++++++
+sensor_msgs/Image input_map 		# input map from map segmentation action server for the first time and for the next time from inspect room action server to find the next unprocessed room
+float64 map_resolution				# map resolution of the supplied map in meter
+float64 map_origin_x 				# x coordinate of origin of the supplied map in meter
+float64 map_origin_y				# y coordinate of origin of the supplied map in meter
+int32[] room_center_x				# x coordinate of center of each room of the supplied map in pixel
+int32[] room_center_y				# y coordinate of center of each room of the supplied map in pixel
+---
+#+++++++++++++++++++++++++++++++++++++result definition+++++++++++++++++++++++++++++++++++++++++++++++++
+int32[] room_number					# total room number of the supplied map
+int32 center_position_x				# x coordinate of center of current room of the supplied map in pixel
+int32 center_position_y				# y coordinate of center of current room of the supplied map in pixel
+---
+#feedback definition

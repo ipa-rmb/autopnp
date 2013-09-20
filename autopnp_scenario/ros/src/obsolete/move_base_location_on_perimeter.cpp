@@ -1,4 +1,4 @@
-#include <autopnp_scenario/move_base_location_on_perimeter.h>
+#include <autopnp_scenario/obsolete/move_base_location_on_perimeter.h>
 
 
 

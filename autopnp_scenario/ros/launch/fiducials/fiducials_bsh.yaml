@@ -1,0 +1,23 @@
+# Marker type
+# TYPE_PI, TYPE_ARUCO
+fiducial_type: TYPE_PI
+# Start node as service or topic
+# MODE_SERVICE or MODE_TOPIC or MODE_TOPIC_AND_SERVICE
+ros_node_mode: MODE_SERVICE
+# Configuration filename
+model_filename: piTagIni_0.xml
+# Compute a measure of image sharpness and publish it with each marker at the field 'score'
+compute_sharpness_measure: false
+# The m and n parameters of the linear calibration function sharpness_score = m * pixel_count + n -> m,n can be determined with the 'log_or_calibrate_sharpness_measurements' option 
+sharpness_calibration_parameter_m: 9139.749632393357        # 10756.2
+sharpness_calibration_parameter_n: -2670187.875850272       # -2.31534e+06
+# if true, the sharpness measurements are logged and saved to disc for calibration of the curve or directly calibrated within the program (aee also parameters m and n above)
+log_or_calibrate_sharpness_measurements: false
+# Publish coordinate systems of detected fiducials as marker_array for rviz
+publish_marker_array: true
+# Publish TF
+publish_tf: true
+# Publish 2D image
+publish_2d_image: true
+# verbosity level on output (1=all outputs, 2=only warnings,infos and errors)
+debug_verbosity: 1

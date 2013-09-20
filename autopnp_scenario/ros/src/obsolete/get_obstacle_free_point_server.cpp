@@ -16,9 +16,9 @@ bool search(autopnp_scenario::CheckPointAccessibility::Request &req,
 		temp = CP_obj.get_available_points_( req.points_to_check );
 		for(uchar i = 0 ; i < temp.size(); i++)
 			{
-				res.accessibility_flags[i] = temp [i];
+				res.accessibility_flag[i] = temp [i];
 			}
-		ROS_INFO( "Result : %d",res.accessibility_flags[0]);
+		ROS_INFO( "Result : %d",res.accessibility_flag[0]);
 		return true;
 	}
 

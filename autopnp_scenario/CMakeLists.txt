@@ -45,36 +45,31 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/ros/include
 #rosbuild_add_executable(test_test ros/src/test.cpp)
 
 			#Exploration Algorithm Executable
-rosbuild_add_executable(Exploration_Algorithm_2nd_version ros/src/Exploration_Algorithm_2nd_version.cpp)
+#rosbuild_add_executable(Exploration_Algorithm_2nd_version ros/src/Exploration_Algorithm_2nd_version.cpp)
 
 			#Exploration Algorithm Library executable
-rosbuild_add_library(exploration_algorithm_action_server_library ros/src/exploration_algorithm_action_server_library.cpp)
-rosbuild_link_boost(exploration_algorithm_action_server_library thread)
+#rosbuild_add_library(exploration_algorithm_action_server_library ros/src/exploration_algorithm_action_server_library.cpp)
+#rosbuild_link_boost(exploration_algorithm_action_server_library thread)
 
 			#Analyze Map Server and Client
-rosbuild_add_executable(analyze_map_server ros/src/analyze_map_server.cpp)
+#rosbuild_add_executable(analyze_map_server ros/src/analyze_map_server.cpp)
 
-target_link_libraries(analyze_map_server exploration_algorithm_action_server_library)
-
-rosbuild_add_executable(analyze_map_client ros/src/analyze_map_client.cpp)
-
-rosbuild_link_boost(analyze_map_client thread)
-
+#target_link_libraries(analyze_map_server exploration_algorithm_action_server_library)
 
 			#Next Room Server and Client
-rosbuild_add_executable(next_room_server ros/src/next_room_server.cpp)
+#rosbuild_add_executable(next_room_server ros/src/next_room_server.cpp)
 
-target_link_libraries(next_room_server exploration_algorithm_action_server_library)
+#target_link_libraries(next_room_server exploration_algorithm_action_server_library)
 
-rosbuild_add_executable(next_room_client ros/src/next_room_client.cpp)
+#rosbuild_add_executable(next_room_client ros/src/next_room_client.cpp)
 
-rosbuild_link_boost(next_room_client thread)
+#rosbuild_link_boost(next_room_client thread)
 
 
 			#Inspect Room Server and Client
-rosbuild_add_executable(inspect_room_server ros/src/inspect_room_server.cpp)
+#rosbuild_add_executable(inspect_room_server ros/src/inspect_room_server.cpp)
 
-target_link_libraries(inspect_room_server exploration_algorithm_action_server_library)
+#target_link_libraries(inspect_room_server exploration_algorithm_action_server_library)
 
 #rosbuild_add_executable(inspect_room_client ros/src/inspect_room_client.cpp)
 
@@ -82,9 +77,9 @@ target_link_libraries(inspect_room_server exploration_algorithm_action_server_li
 
 
 			#to location Server and Client
-rosbuild_add_executable(to_location_server ros/src/to_location_server.cpp)
+#rosbuild_add_executable(to_location_server ros/src/to_location_server.cpp)
 
-target_link_libraries(to_location_server exploration_algorithm_action_server_library)
+#target_link_libraries(to_location_server exploration_algorithm_action_server_library)
 
 #rosbuild_add_executable(to_location_client ros/src/to_location_client.cpp)
 
@@ -92,9 +87,9 @@ target_link_libraries(to_location_server exploration_algorithm_action_server_lib
 
 
 			#Random Location Server and Client
-rosbuild_add_executable(random_location_server ros/src/random_location_server.cpp)
+#rosbuild_add_executable(random_location_server ros/src/random_location_server.cpp)
 
-target_link_libraries(random_location_server exploration_algorithm_action_server_library)
+#target_link_libraries(random_location_server exploration_algorithm_action_server_library)
 
 #rosbuild_add_executable(random_location_client ros/src/random_location_client.cpp)
 
@@ -102,27 +97,56 @@ target_link_libraries(random_location_server exploration_algorithm_action_server
 
 
 			#move_base_location_on_perimeter executable
-rosbuild_add_executable(move_base_location_on_perimeter_cpp ros/src/move_base_location_on_perimeter.cpp)
-rosbuild_add_library(move_base_location_on_perimeter ros/src/move_base_location_on_perimeter.cpp)
-rosbuild_link_boost(move_base_location_on_perimeter thread)		
+#rosbuild_add_executable(move_base_location_on_perimeter_cpp ros/src/move_base_location_on_perimeter.cpp)
+#rosbuild_add_library(move_base_location_on_perimeter ros/src/move_base_location_on_perimeter.cpp)
+#rosbuild_link_boost(move_base_location_on_perimeter thread)		
 
 			#Get Obstacle free point server and client executable
-rosbuild_add_executable(get_obstacle_free_point_server ros/src/get_obstacle_free_point_server.cpp)	
-target_link_libraries(get_obstacle_free_point_server move_base_location_on_perimeter)	
+#rosbuild_add_executable(get_obstacle_free_point_server ros/src/get_obstacle_free_point_server.cpp)	
+#target_link_libraries(get_obstacle_free_point_server move_base_location_on_perimeter)	
 
-rosbuild_add_executable(get_obstacle_free_point_client ros/src/get_obstacle_free_point_client.cpp)	
-target_link_libraries(get_obstacle_free_point_client move_base_location_on_perimeter)				
+#rosbuild_add_executable(get_obstacle_free_point_client ros/src/get_obstacle_free_point_client.cpp)	
+#target_link_libraries(get_obstacle_free_point_client move_base_location_on_perimeter)				
 
 
 			#Move Arm Client
-rosbuild_add_executable(Move_Arm_Client ros/src/Move_Arm_Client.cpp)
+#rosbuild_add_executable(Move_Arm_Client ros/src/Move_Arm_Client.cpp)
 
 			#Inflation Data Test CPP	
-rosbuild_add_executable(Inflation_Data_test ros/src/Inflation_Data_test.cpp)
+#rosbuild_add_executable(Inflation_Data_test ros/src/Inflation_Data_test.cpp)
 
 			#Check Point accessibility
-rosbuild_add_executable(map_point_accessibility_check_server ros/src/map_point_accessibility_check_server.cpp)
-rosbuild_add_executable(map_point_accessibility_check_client ros/src/map_point_accessibility_check_client.cpp)
+#rosbuild_add_executable(map_point_accessibility_check_server ros/src/map_point_accessibility_check_server.cpp)
+#rosbuild_add_executable(map_point_accessibility_check_client ros/src/map_point_accessibility_check_client.cpp)
 
+			#map segmentation action server and client
+rosbuild_add_executable(map_segmentation_action_server ros/src/map_segmentation_action_server.cpp)
 
+rosbuild_add_executable(map_segmentation_action_client ros/src/map_segmentation_action_client.cpp)
+
+rosbuild_link_boost(map_segmentation_action_client thread)
+
+			#find next room action server
+rosbuild_add_executable(find_next_unprocessed_room_action_server ros/src/find_next_unprocessed_room_action_server.cpp)		
+
+			#go to room location action server
+rosbuild_add_executable(go_to_room_location_action_server ros/src/go_to_room_location_action_server.cpp)		
+
+			#Random Location Finder Server
+rosbuild_add_executable(random_location_finder_action_server ros/src/random_location_finder_action_server.cpp)	
+
+			#Inspect Room Server			
+rosbuild_add_executable(inspect_room_action_server ros/src/inspect_room_action_server.cpp)
+
+			#Trash Bin detection Server			
+rosbuild_add_executable(trash_bin_detection_service_server ros/src/trash_bin_detection_service_server.cpp)
+
+			#Activate Trash Bin Detection Client 			
+rosbuild_add_executable(activate_trash_bin_detection_client ros/src/activate_trash_bin_detection_client.cpp)
+
+			#Deactivate Trash Bin Detection Client 		
+rosbuild_add_executable(deactivate_trash_bin_detection_client ros/src/deactivate_trash_bin_detection_client.cpp)
+
+			#detect fiducials service server		
+rosbuild_add_executable(detect_fiducials_service_server ros/src/detect_fiducials_service_server.cpp)
 

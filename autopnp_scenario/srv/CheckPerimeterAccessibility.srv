@@ -1,5 +1,0 @@
-geometry_msgs/Pose2D center       # center of the circle whose perimeter should be checked for accessibility, in [m,m,rad]
-float64 radius                    # radius of the circle, in [m]
-float64 rotational_sampling_step  # rotational sampling step width for checking points on the perimeter, in [rad] 
----
-geometry_msgs/Pose2D[] accessible_poses_on_perimeter 	  # array of accessible poses on the perimeter of the circle

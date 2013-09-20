@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- topic identifying the rgb source -->
+  <arg name="rgb_topic" default="/cam3d/rgb/" />
+  <!-- arg name="rgb_topic" default="/camera/rgb/" /-->
+  <!--arg name="rgb_topic" default="/stereo/left/" /-->
+  <!--arg name="rgb_topic" default="/stereo/right/" /-->
+  <arg name="yaml_file" default="fiducials_0.yaml" />
+  
+  <!-- send parameters to parameter server -->
+  <rosparam command="load" ns="fiducials" file="$(find autopnp_scenario)/ros/launch/fiducials/$(arg yaml_file)"/>
+  <param name="fiducials/model_directory" value="$(find cob_fiducials)/common/files/models/"/>
+
+  <!-- start left camera -->
+  <node pkg="cob_fiducials" ns="fiducials" type="fiducials" name="fiducials" output="screen">
+	<!--launch-prefix="/usr/bin/gdb"-->
+	<remap from="image_color" to="$(arg rgb_topic)/image"/> 	
+	<remap from="camera_info" to="$(arg rgb_topic)/camera_info"/>	
+
+	<remap from="detect_fiducials" to="/fiducials/detect_fiducials"/>
+	<remap from="fiducial_markers" to="/fiducials/fiducial_markers"/>
+	<remap from="image" to="/fiducials/image"/>
+	<remap from="get_fiducials" to="/fiducials/get_fiducials"/>
+  </node>
+
+</launch>

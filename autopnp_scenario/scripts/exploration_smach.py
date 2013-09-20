@@ -1,286 +1,334 @@
-#!/usr/bin/env python
+#! /usr/bin/env python
+#################################################################
+##\file
+## \note
+#   Copyright (c) 2013 \n
+#   Fraunhofer Institute for Manufacturing Engineering
+#   and Automation (IPA) \n\n
+#
+#################################################################
+#
+# \note
+#   Project name: care-o-bot
+# \note
+#   ROS stack name: autopnp
+# \note
+#   ROS package name: autopnp_scenario
+#
+# \author: Mohammad Muinul Islam(email-> mohammad.islam@ipa.fraunhofer.de)
+#
+# \author
+# Supervised by: Richard Bormann(email:richard.bormann@ipa.fraunhofer.de) 
+# 
+# \date Date of creation: August 2013
+#
+# \brief
+# exploration smach is a smach representation of Exploration Algorithm
+#
+#################################################################
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#     - Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer. \n
+#     - Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution. \n
+#     - Neither the name of the Fraunhofer Institute for Manufacturing
+#       Engineering and Automation (IPA) nor the names of its
+#       contributors may be used to endorse or promote products derived from
+#       this software without specific prior written permission. \n
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License LGPL as 
+# published by the Free Software Foundation, either version 3 of the 
+# License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Lesser General Public License LGPL for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public 
+# License LGPL along with this program. 
+# If not, see <http://www.gnu.org/licenses/>.
+#
+#################################################################
 
 import roslib; roslib.load_manifest('autopnp_scenario')
 import rospy
 import smach
 import smach_ros
 
-from analyze_map_client import AnalyzeMap
-from next_room_client import NextRoom
-from to_location_client import to_goal
-from random_location_client import random_Location
-from inspect_room_client import inspect_Room
+from map_segmentation_action_client import MapSegmentationActionClient
+from find_next_unprocessed_room_action_client import find_next_unprocessed_room
+from go_to_room_location_action_client import go_to_room_location
+from random_location_finder_action_client import random_location_finder_client
+from inspect_room_action_client import inspect_room
 
-
-class analyze_map(smach.State):
+# The AnalyzeMap class defines a state machine of smach which basically 
+# call the map segmentation action client object and execute the function
+# of action client to communicate with action server
+class AnalyzeMap(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['list_of_rooms'], output_keys=['A_M_data_img',
-                                                                            'A_M_data_map_resolution',
-                                                                            'A_M_data_map_origin_x',
-                                                                            'A_M_data_map_origin_y',
-                                                                            'A_M_data_room_center_x', 
-                                                                            'A_M_data_room_center_y',
-                                                                            'A_M_data_room_min_x',
-                                                                            'A_M_data_room_max_x',
-                                                                            'A_M_data_room_min_y',
-                                                                            'A_M_data_room_max_y'])
-
+        smach.State.__init__(self, outcomes=['list_of_rooms'], output_keys=['analyze_map_data_img_',
+                                                                            'analyze_map_data_map_resolution_',
+                                                                            'analyze_map_data_map_origin_x_',
+                                                                            'analyze_map_data_map_origin_y_',
+                                                                            'analyze_map_data_room_center_x_', 
+                                                                            'analyze_map_data_room_center_y_',
+                                                                            'analyze_map_data_room_min_x_',
+                                                                            'analyze_map_data_room_max_x_',
+                                                                            'analyze_map_data_room_min_y_',
+                                                                            'analyze_map_data_room_max_y_'])
 
     def execute(self, userdata):
         
-        A_M_data_class = AnalyzeMap()
+        map_segmentation_action_client_object_ = MapSegmentationActionClient()
         
         rospy.sleep(1)
-        rospy.loginfo('Executing state Analyze_Map')
+        rospy.loginfo('Executing state analyze map.....')
                         
-        A_M_data_result = A_M_data_class.Analyze_Map_client()   
+        map_segmentation_action_server_result_ = map_segmentation_action_client_object_.map_segmentation_action_client_()   
         
-        userdata.A_M_data_img = A_M_data_result.output_img
-        userdata.A_M_data_map_resolution = A_M_data_result.map_resolution        
-        userdata.A_M_data_map_origin_x = A_M_data_result.Map_Origin_x
-        userdata.A_M_data_map_origin_y = A_M_data_result.Map_Origin_y        
-        userdata.A_M_data_room_center_x = A_M_data_result.room_center_x
-        userdata.A_M_data_room_center_y = A_M_data_result.room_center_y
-        userdata.A_M_data_room_min_x = A_M_data_result.room_min_x
-        userdata.A_M_data_room_max_x = A_M_data_result.room_max_x
-        userdata.A_M_data_room_min_y = A_M_data_result.room_min_y        
-        userdata.A_M_data_room_max_y = A_M_data_result.room_max_y
+        userdata.analyze_map_data_img_ = map_segmentation_action_server_result_.output_map
+        userdata.analyze_map_data_map_resolution_ = map_segmentation_action_server_result_.map_resolution        
+        userdata.analyze_map_data_map_origin_x_ = map_segmentation_action_server_result_.map_origin_x
+        userdata.analyze_map_data_map_origin_y_ = map_segmentation_action_server_result_.map_origin_y        
+        userdata.analyze_map_data_room_center_x_ = map_segmentation_action_server_result_.room_center_x_in_pixel
+        userdata.analyze_map_data_room_center_y_ = map_segmentation_action_server_result_.room_center_y_in_pixel
+        userdata.analyze_map_data_room_min_x_ = map_segmentation_action_server_result_.room_min_x_in_pixel
+        userdata.analyze_map_data_room_max_x_ = map_segmentation_action_server_result_.room_max_x_in_pixel
+        userdata.analyze_map_data_room_min_y_ = map_segmentation_action_server_result_.room_min_y_in_pixel        
+        userdata.analyze_map_data_room_max_y_ = map_segmentation_action_server_result_.room_max_y_in_pixel
         
         return 'list_of_rooms'  
        
-
-
-class FindNextRoom(smach.State):
+# The NextUnprocessedRoom class defines a state machine of smach which basically 
+# call the find next unprocessed room action client object and execute the function
+# of action client to communicate with action server
+class NextUnprocessedRoom(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['location','no_rooms','arrived'],input_keys=['F_N_R_data_img',
-                                                                                         'A_M_data_map_resolution',
-                                                                                         'A_M_data_map_origin_x',
-                                                                                         'A_M_data_map_origin_y',
-                                                                                         'A_M_data_room_center_x',
-                                                                                         'A_M_data_room_center_y',
-                                                                                         'F_N_R_room_number_in',
-                                                                                         'F_N_R_loop_counter_in'],                             
-                                                                            output_keys=['F_N_R_room_number_out',
-                                                                                         'F_N_R_loop_counter_out',
-                                                                                         'F_N_R_center_X',
-                                                                                         'F_N_R_center_Y'])
+        smach.State.__init__(self, outcomes=['location','no_rooms','arrived'],input_keys=['find_next_unprocessed_room_data_img_',
+                                                                                          'analyze_map_data_map_resolution_',
+                                                                                          'analyze_map_data_map_origin_x_',
+                                                                                          'analyze_map_data_map_origin_y_',
+                                                                                          'analyze_map_data_room_center_x_',
+                                                                                          'analyze_map_data_room_center_y_',
+                                                                                          'find_next_unprocessed_room_number_in',
+                                                                                          'find_next_unprocessed_room_loop_counter_in_'],                             
+                                                                             output_keys=['find_next_unprocessed_room_number_out_',
+                                                                                          'find_next_unprocessed_room_loop_counter_out_',
+                                                                                          'find_next_unprocessed_room_center_x_',
+                                                                                          'find_next_unprocessed_room_center_y_'])
      
         
-    def execute(self, userdata ):       
-                
+    def execute(self, userdata ):                       
         #rospy.sleep(10)
-        rospy.loginfo('Executing state Find_Next_Room')
-        
-        if userdata.F_N_R_loop_counter_in <= len(userdata.A_M_data_room_center_x):
-            F_N_R_data_result = NextRoom( userdata.F_N_R_data_img,
-                                          userdata.A_M_data_room_center_x,
-                                          userdata.A_M_data_room_center_y,
-                                          userdata.A_M_data_map_resolution,
-                                          userdata.A_M_data_map_origin_x,
-                                          userdata.A_M_data_map_origin_y )
+        rospy.loginfo('Executing state next unprocessed room.....')        
+        if userdata.find_next_unprocessed_room_loop_counter_in_ <= len(userdata.analyze_map_data_room_center_x_):
+            find_next_unprocessed_room_action_server_result_ = find_next_unprocessed_room( userdata.find_next_unprocessed_room_data_img_,
+                                                                                           userdata.analyze_map_data_room_center_x_,
+                                                                                           userdata.analyze_map_data_room_center_y_,
+                                                                                           userdata.analyze_map_data_map_resolution_,
+                                                                                           userdata.analyze_map_data_map_origin_x_,
+                                                                                           userdata.analyze_map_data_map_origin_y_ )
                     
-            #rospy.sleep(10)
-        
-            userdata.F_N_R_room_number_out = F_N_R_data_result.room_number
-            
-            rospy.loginfo('Current room No: %d'%userdata.F_N_R_loop_counter_in)  
-            userdata.F_N_R_loop_counter_out = userdata.F_N_R_loop_counter_in + 1  
-            userdata.F_N_R_center_X = F_N_R_data_result.CenterPositionX
-            userdata.F_N_R_center_Y = F_N_R_data_result.CenterPositionY           
-                                  
+            #rospy.sleep(10)        
+            userdata.find_next_unprocessed_room_number_out_ = find_next_unprocessed_room_action_server_result_.room_number            
+            rospy.loginfo('Current room No: %d'%userdata.find_next_unprocessed_room_loop_counter_in_)  
+            userdata.find_next_unprocessed_room_loop_counter_out_ = userdata.find_next_unprocessed_room_loop_counter_in_ + 1  
+            userdata.find_next_unprocessed_room_center_x_ = find_next_unprocessed_room_action_server_result_.center_position_x
+            userdata.find_next_unprocessed_room_center_y_ = find_next_unprocessed_room_action_server_result_.center_position_y                                           
             return 'location'
-
         else:
             return 'no_rooms'
 
      
-     
-class GoToLocation(smach.State):
+# The GoToRoomLocation class defines a state machine of smach which basically 
+# call the go to room location action client object and execute the function
+# of action client to communicate with action server     
+class GoToRoomLocation(smach.State):
     def __init__(self):
-        smach.State.__init__(self,outcomes=['successful','unsuccessful'],input_keys=['G_T_L_data_img',
-                                                                                     'A_M_data_map_resolution',
-                                                                                     'A_M_data_map_origin_x',
-                                                                                     'A_M_data_map_origin_y',
-                                                                                     'F_N_R_center_X',
-                                                                                     'F_N_R_center_Y',
-                                                                                     'R_L_F_random_location_x',
-                                                                                     'R_L_F_random_location_y',
-                                                                                     'G_T_L_loop_counter_in'],
-                                                                        output_keys=['G_T_L_loop_counter_out'])        
+        smach.State.__init__(self,outcomes=['successful','unsuccessful'],input_keys=['go_to_room_location_data_img_',
+                                                                                     'analyze_map_data_map_resolution_',
+                                                                                     'analyze_map_data_map_origin_x_',
+                                                                                     'analyze_map_data_map_origin_y_',
+                                                                                     'find_next_unprocessed_room_center_x_',
+                                                                                     'find_next_unprocessed_room_center_y_',
+                                                                                     'random_location_finder_random_location_x_',
+                                                                                     'random_location_finder_random_location_y_',
+                                                                                     'go_to_room_location_loop_counter_in_'],
+                                                                        output_keys=['go_to_room_location_loop_counter_out_'])        
         
-    def execute(self, userdata):
-        
+    def execute(self, userdata):        
         #rospy.sleep(10)
-        rospy.loginfo('Executing state Go_To_Location')        
-        
-        if userdata.G_T_L_loop_counter_in == 0 :
-            G_T_L_data_result = to_goal(userdata.G_T_L_data_img,
-                                        userdata.F_N_R_center_X , 
-                                        userdata.F_N_R_center_Y,
-                                        userdata.A_M_data_map_resolution,
-                                        userdata.A_M_data_map_origin_x,
-                                        userdata.A_M_data_map_origin_y )
+        rospy.loginfo('Executing state go to room location')                
+        if userdata.go_to_room_location_loop_counter_in_ == 0 :
+            go_to_room_location_action_server_result_ = go_to_room_location(userdata.go_to_room_location_data_img_,
+                                                                            userdata.find_next_unprocessed_room_center_x_ , 
+                                                                            userdata.find_next_unprocessed_room_center_y_,
+                                                                            userdata.analyze_map_data_map_resolution_,
+                                                                            userdata.analyze_map_data_map_origin_x_,
+                                                                            userdata.analyze_map_data_map_origin_y_ )
             
         else:
-             G_T_L_data_result = to_goal(userdata.G_T_L_data_img,
-                                         userdata.R_L_F_random_location_x,
-                                         userdata.R_L_F_random_location_y,
-                                         userdata.A_M_data_map_resolution,
-                                         userdata.A_M_data_map_origin_x,
-                                         userdata.A_M_data_map_origin_y)
+             go_to_room_location_action_server_result_ = go_to_room_location(userdata.go_to_room_location_data_img_,
+                                                                             userdata.random_location_finder_random_location_x_,
+                                                                             userdata.random_location_finder_random_location_y_,
+                                                                             userdata.analyze_map_data_map_resolution_,
+                                                                             userdata.analyze_map_data_map_origin_x_,
+                                                                             userdata.analyze_map_data_map_origin_y_)
                     
-        if G_T_L_data_result.resultant == 'True':        
-            return 'successful'
-        
+        if go_to_room_location_action_server_result_.output_flag == 'True':        
+            return 'successful'        
         else:
-            userdata.G_T_L_loop_counter_out = userdata.G_T_L_loop_counter_in + 1
+            userdata.go_to_room_location_loop_counter_out_ = userdata.go_to_room_location_loop_counter_in_ + 1
             return 'unsuccessful' 
     
     
-    
-class Random_Location_Finder(smach.State):
+# The FindRandomLocation class defines a state machine of smach which basically 
+# call the random location finder action client object and execute the function
+# of action client to communicate with action server        
+class FindRandomLocation(smach.State):
     def __init__(self):
-        smach.State.__init__(self,outcomes=['re_locate','unsuccessful_five_times'],input_keys=['R_L_F_data_img_in',
-                                                                                               'R_L_F_room_number',
-                                                                                               'A_M_data_room_min_x',
-                                                                                               'A_M_data_room_max_x',
-                                                                                               'A_M_data_room_min_y',
-                                                                                               'A_M_data_room_max_y',
-                                                                                               'R_L_F_counter_in'],
-                                                                                  output_keys=['R_L_F_random_location_x',
-                                                                                               'R_L_F_random_location_y',
-                                                                                               'R_L_F_counter_out',
-                                                                                               'R_L_F_data_img_out'])        
+        smach.State.__init__(self,outcomes=['re_locate','unsuccessful_five_times'],input_keys=['random_location_finder_data_img_in_',
+                                                                                               'analyze_map_data_map_resolution_',
+                                                                                               'analyze_map_data_map_origin_x_',
+                                                                                               'analyze_map_data_map_origin_y_',
+                                                                                               'random_location_finder_room_number_',
+                                                                                               'analyze_map_data_room_min_x_',
+                                                                                               'analyze_map_data_room_max_x_',
+                                                                                               'analyze_map_data_room_min_y_',
+                                                                                               'analyze_map_data_room_max_y_',
+                                                                                               'random_location_finder_counter_in_'],
+                                                                                  output_keys=['random_location_finder_random_location_x_',
+                                                                                               'random_location_finder_random_location_y_',
+                                                                                               'random_location_finder_counter_out_',
+                                                                                               'random_location_finder_data_img_out_'])        
         
     def execute(self, userdata):
         
         #rospy.sleep(10)
-        rospy.loginfo('Executing state Go_To_Location')        
+        rospy.loginfo('Executing state find random location')        
         
-        R_L_F_data_result = random_Location(userdata.R_L_F_data_img_in,
-                                            userdata.R_L_F_room_number,
-                                            userdata.A_M_data_room_min_x,
-                                            userdata.A_M_data_room_max_x,
-                                            userdata.A_M_data_room_min_y,
-                                            userdata.A_M_data_room_max_y,
-                                            userdata.R_L_F_counter_in)
+        random_location_finder_action_server_result_ = random_location_finder_client(userdata.random_location_finder_data_img_in_,
+                                                                                     userdata.analyze_map_data_map_resolution_,
+                                                                                     userdata.analyze_map_data_map_origin_x_,
+                                                                                     userdata.analyze_map_data_map_origin_y_ ,
+                                                                                     userdata.random_location_finder_room_number_,
+                                                                                     userdata.analyze_map_data_room_min_x_,
+                                                                                     userdata.analyze_map_data_room_max_x_,
+                                                                                     userdata.analyze_map_data_room_min_y_,
+                                                                                     userdata.analyze_map_data_room_max_y_,
+                                                                                     userdata.random_location_finder_counter_in_)
         
-        userdata.R_L_F_random_location_x = R_L_F_data_result.random_location_x
-        userdata.R_L_F_random_location_y = R_L_F_data_result.random_location_y
-        
-        if userdata.R_L_F_counter_in < 6:
-            return 're_locate'
-        
+        userdata.random_location_finder_random_location_x_ = random_location_finder_action_server_result_.random_location_x
+        userdata.random_location_finder_random_location_y_ = random_location_finder_action_server_result_.random_location_y        
+        if userdata.random_location_finder_counter_in_ < 6:
+            rospy.loginfo("unsuccessful rate: %d",userdata.random_location_finder_counter_in_)
+            return 're_locate'        
         else:
-            print "unsuccessful rate: ",userdata.R_L_F_counter_in
-            userdata.R_L_F_counter_out = 0 ;
-            userdata.R_L_F_data_img_out = R_L_F_data_result.output_img
+            rospy.loginfo("unsuccessful rate: %d",userdata.random_location_finder_counter_in_)
+            userdata.random_location_finder_counter_out_ = 0 ;
+            userdata.random_location_finder_data_img_out_ = random_location_finder_action_server_result_.output_img
             return 'unsuccessful_five_times'
-     
+   
 
-
+# The InspectRoom class defines a state machine of smach which basically 
+# call the inspect room action client object and execute the function
+# of action client to communicate with action server   
 class InspectRoom(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['finished'],input_keys=['I_R_data_img_in',
-                                                                     'I_R_room_number',
-                                                                     'A_M_data_room_center_x',
-                                                                     'A_M_data_room_center_y',
-                                                                     'A_M_data_room_min_x',
-                                                                     'A_M_data_room_max_x',
-                                                                     'A_M_data_room_min_y',
-                                                                     'A_M_data_room_max_y',
-                                                                     'A_M_data_map_resolution',
-                                                                     'A_M_data_map_origin_x',
-                                                                     'A_M_data_map_origin_y'],
-                                                        output_keys=['I_R_data_img_out'])         
+        smach.State.__init__(self, outcomes=['finished'],input_keys=['inspect_room_data_img_in_',
+                                                                     'inspect_room_room_number_',
+                                                                     'analyze_map_data_room_center_x_',
+                                                                     'analyze_map_data_room_center_y_',
+                                                                     'analyze_map_data_room_min_x_',
+                                                                     'analyze_map_data_room_max_x_',
+                                                                     'analyze_map_data_room_min_y_',
+                                                                     'analyze_map_data_room_max_y_',
+                                                                     'analyze_map_data_map_resolution_',
+                                                                     'analyze_map_data_map_origin_x_',
+                                                                     'analyze_map_data_map_origin_y_'],
+                                                        output_keys=['inspect_room_img_out_'])         
         
-    def execute(self, userdata):
-        
+    def execute(self, userdata):        
         #rospy.sleep(10)
-        rospy.loginfo('Executing state Inspect_Room')        
-
-        I_R_data_result=inspect_Room( userdata.I_R_data_img_in,
-                                    userdata.I_R_room_number,
-                                    userdata.A_M_data_room_center_x,
-                                    userdata.A_M_data_room_center_y,
-                                    userdata.A_M_data_room_min_x,
-                                    userdata.A_M_data_room_max_x,
-                                    userdata.A_M_data_room_min_y,
-                                    userdata.A_M_data_room_max_y,
-                                    userdata.A_M_data_map_resolution,
-                                    userdata.A_M_data_map_origin_x,
-                                    userdata.A_M_data_map_origin_y)
-        #rospy.sleep(10)
-        
-        userdata.I_R_data_img_out = I_R_data_result.output_img
-        
+        rospy.loginfo('Executing state inspect_room')        
+        inspect_room_action_server_result_= inspect_room( userdata.inspect_room_data_img_in_,
+                                                          userdata.inspect_room_room_number_,
+                                                          userdata.analyze_map_data_room_center_x_,
+                                                          userdata.analyze_map_data_room_center_y_,
+                                                          userdata.analyze_map_data_room_min_x_,
+                                                          userdata.analyze_map_data_room_max_x_,
+                                                          userdata.analyze_map_data_room_min_y_,
+                                                          userdata.analyze_map_data_room_max_y_,
+                                                          userdata.analyze_map_data_map_resolution_,
+                                                          userdata.analyze_map_data_map_origin_x_,
+                                                          userdata.analyze_map_data_map_origin_y_)
+        #rospy.sleep(10)        
+        userdata.inspect_room_img_out_ = inspect_room_action_server_result_.output_img        
         return 'finished'          
 
 
 
 def main():
-    
     rospy.init_node('smach_exploration')
-
     sm_top = smach.StateMachine(outcomes=['finish'])    
-
     with sm_top:
-        smach.StateMachine.add('ANALYZE_MAP', analyze_map(),transitions={'list_of_rooms':'UNPROCESSED_ROOM'},
-                   remapping={'A_M_data_img':'sm_img'})
-               
+        smach.StateMachine.add('ANALYZE_MAP', AnalyzeMap(),transitions={'list_of_rooms':'UNPROCESSED_ROOM'},
+                   remapping={'analyze_map_data_img_':'sm_img'})               
         sm_sub = smach.StateMachine(outcomes=['arrived','no_more_rooms_left'],input_keys=['sm_img',
-                                                                                        'A_M_data_map_resolution',
-                                                                                        'A_M_data_map_origin_x',
-                                                                                        'A_M_data_map_origin_y',
-                                                                                        'A_M_data_room_center_x', 
-                                                                                        'A_M_data_room_center_y',
-                                                                                        'A_M_data_room_min_x',
-                                                                                        'A_M_data_room_max_x',
-                                                                                        'A_M_data_room_min_y',
-                                                                                        'A_M_data_room_max_y'],
+                                                                                        'analyze_map_data_map_resolution_',
+                                                                                        'analyze_map_data_map_origin_x_',
+                                                                                        'analyze_map_data_map_origin_y_',
+                                                                                        'analyze_map_data_room_center_x_', 
+                                                                                        'analyze_map_data_room_center_y_',
+                                                                                        'analyze_map_data_room_min_x_',
+                                                                                        'analyze_map_data_room_max_x_',
+                                                                                        'analyze_map_data_room_min_y_',
+                                                                                        'analyze_map_data_room_max_y_'],
                                                                            output_keys=['sm_RoomNo'])
         sm_sub.userdata.sm_counter = 1
-        sm_sub.userdata.sm_location_counter = 0
-        
+        sm_sub.userdata.sm_location_counter = 0       
         with sm_sub:                 
-            smach.StateMachine.add('FIND_NEXT_ROOM', FindNextRoom(),transitions={'location':'GO_TO_LOCATION','no_rooms':'no_more_rooms_left'},
-                   remapping={'F_N_R_data_img':'sm_img',
-                              'F_N_R_room_number_in':'sm_RoomNo',
-                              'F_N_R_room_number_out':'sm_RoomNo',
-                              'F_N_R_loop_counter_in':'sm_counter',
-                              'F_N_R_loop_counter_out':'sm_counter'})
+            smach.StateMachine.add('FIND_NEXT_ROOM', NextUnprocessedRoom(),transitions={'location':'GO_TO_LOCATION','no_rooms':'no_more_rooms_left'},
+                   remapping={'find_next_unprocessed_room_data_img_':'sm_img',
+                              'find_next_unprocessed_room_number_in':'sm_RoomNo',
+                              'find_next_unprocessed_room_number_out_':'sm_RoomNo',
+                              'find_next_unprocessed_room_loop_counter_in_':'sm_counter',
+                              'find_next_unprocessed_room_loop_counter_out_':'sm_counter'})
             
-            smach.StateMachine.add('GO_TO_LOCATION', GoToLocation(),transitions={'successful':'arrived','unsuccessful':'RANDOM_LOCATION_FINDER'},
-                   remapping={'G_T_L_data_img':'sm_img',
-                              'G_T_L_loop_counter_in':'sm_location_counter',
-                              'G_T_L_loop_counter_out':'sm_location_counter'})  
+            smach.StateMachine.add('GO_TO_LOCATION', GoToRoomLocation(),transitions={'successful':'arrived','unsuccessful':'RANDOM_LOCATION_FINDER'},
+                   remapping={'go_to_room_location_data_img_':'sm_img',
+                              'go_to_room_location_loop_counter_in_':'sm_location_counter',
+                              'go_to_room_location_loop_counter_out_':'sm_location_counter'})  
             
-            smach.StateMachine.add('RANDOM_LOCATION_FINDER', Random_Location_Finder(),transitions={'re_locate':'GO_TO_LOCATION','unsuccessful_five_times':'FIND_NEXT_ROOM'},
-                   remapping={'R_L_F_data_img_in':'sm_img',
-                              'R_L_F_data_img_out':'sm_img',
-                              'R_L_F_counter_in':'sm_location_counter',
-                              'R_L_F_counter_out':'sm_location_counter',
-                              'R_L_F_room_number':'sm_RoomNo'}) 
+            smach.StateMachine.add('RANDOM_LOCATION_FINDER', FindRandomLocation(),transitions={'re_locate':'GO_TO_LOCATION','unsuccessful_five_times':'FIND_NEXT_ROOM'},
+                   remapping={'random_location_finder_data_img_in_':'sm_img',
+                              'random_location_finder_data_img_out_':'sm_img',
+                              'random_location_finder_counter_in_':'sm_location_counter',
+                              'random_location_finder_counter_out_':'sm_location_counter',
+                              'random_location_finder_room_number_':'sm_RoomNo'}) 
         
-        smach.StateMachine.add('UNPROCESSED_ROOM', sm_sub ,transitions={'arrived':'INSPECT_ROOM','no_more_rooms_left':'finish'})
-      
+        smach.StateMachine.add('UNPROCESSED_ROOM', sm_sub ,transitions={'arrived':'INSPECT_ROOM','no_more_rooms_left':'finish'})      
         
         smach.StateMachine.add('INSPECT_ROOM', InspectRoom(),transitions={'finished':'UNPROCESSED_ROOM'},
-                   remapping={'I_R_data_img_in':'sm_img',
-                              'I_R_data_img_out':'sm_img',
-                              'I_R_room_number':'sm_RoomNo'})
+                   remapping={'inspect_room_data_img_in_':'sm_img',
+                              'inspect_room_img_out_':'sm_img',
+                              'inspect_room_room_number_':'sm_RoomNo'})
         
     # Create and start the introspection server
     sis = smach_ros.IntrospectionServer('server_name', sm_top, '/SM_ROOT')
     sis.start()
-
+    
     # Execute SMACH plan
     outcome = sm_top.execute()
     
-    #rospy.spin()
-    
+    #rospy.spin()    
     sis.stop()
-
 
 if __name__ == '__main__':
     main()

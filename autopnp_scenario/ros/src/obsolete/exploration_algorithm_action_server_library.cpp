@@ -817,38 +817,59 @@ cv::Mat Exploration::Room_Inspection( cv::Mat RI,
 										 Obstacle_free_Point( Room_Inspection_RI , m , n )
 										)
 										{
-											bool obstacle_in_way = false ;
+											cob_map_accessibility_analysis::CheckPointAccessibility::Request req_points;
+											cob_map_accessibility_analysis::CheckPointAccessibility::Response res_points;
+											std::string points_service_name = "/map_accessibility_analysis/map_points_accessibility_check";
 
-											for (unsigned int i = 0 ; i < Inflation_data_X.size() ; i++ )
-												{
-													if( std::abs( ( ( (n*map_resolution_)+map_origin_.x) - Inflation_data_X[i] ) ) < 0.1 &&
-														std::abs( ( ( (m*map_resolution_)+map_origin_.y) - Inflation_data_Y[i] ) ) < 0.1 )
-														{
-															obstacle_in_way = true ;
-														}
-												}
-/*
-											//boost::mutex::scoped_lock lock(mutex_inflation_topic_);
-											//boost::system_time const timeout=boost::get_system_time() + boost::posix_time::milliseconds(5000);
+											geometry_msgs::Pose2D point;
+											point.x = (n*map_resolution_)+map_origin_.x;
+											point.y = (m*map_resolution_)+map_origin_.y;
+											req_points.points_to_check.push_back(point);
 
-											cv::Mat RM_obstacles_check = RI.clone();
+											// this calls the service server to process our request message and put the result into the response message
+											// this call is blocking, i.e. this program will not proceed until the service server sends the response
+											bool success = ros::service::call(points_service_name, req_points, res_points);
 
-											for( unsigned int idx = 0; idx < Inflation_data_X.size(); idx++ )
-												{
-													RM_obstacles_check.at<unsigned char>( (Inflation_data_Y[idx]- map_origin_.y)/map_resolution_ , (Inflation_data_X[idx]- map_origin_.x)/map_resolution_ ) = 0;
-												}
-
-											cv::imshow("Inflated Map", RM_obstacles_check );
-											cv::waitKey();
-
-											bool obstacle_in_way = false ;
-
-											if( RM_obstacles_check.at<unsigned char>(m,n)== 0 )
-												{
-													obstacle_in_way = true;
-												}
-*/
-											if(!obstacle_in_way)
+											if (success == true)
+											{
+												printf("Points request successful, results:\n");
+												for (unsigned int i=0; i<res_points.accessibility_flags.size(); ++i)
+													printf(" - (xy)=(%f, %f), accessible=%d\n", req_points.points_to_check[i].x, req_points.points_to_check[i].y, res_points.accessibility_flags[i]);
+											}
+											else
+												std::cout << "The service call for points was not successful.\n" << std::endl;
+//											bool obstacle_in_way = false ;
+//											for (unsigned int i = 0 ; i < Inflation_data_X.size() ; i++ )
+//												{
+//													if( std::abs( ( ( (n*map_resolution_)+map_origin_.x) - Inflation_data_X[i] ) ) < 0.1 &&
+//														std::abs( ( ( (m*map_resolution_)+map_origin_.y) - Inflation_data_Y[i] ) ) < 0.1 )
+//														{
+//															obstacle_in_way = true ;
+//														}
+//												}
+//
+///*
+//											//boost::mutex::scoped_lock lock(mutex_inflation_topic_);
+//											//boost::system_time const timeout=boost::get_system_time() + boost::posix_time::milliseconds(5000);
+//
+//											cv::Mat RM_obstacles_check = RI.clone();
+//
+//											for( unsigned int idx = 0; idx < Inflation_data_X.size(); idx++ )
+//												{
+//													RM_obstacles_check.at<unsigned char>( (Inflation_data_Y[idx]- map_origin_.y)/map_resolution_ , (Inflation_data_X[idx]- map_origin_.x)/map_resolution_ ) = 0;
+//												}
+//
+//											cv::imshow("Inflated Map", RM_obstacles_check );
+//											cv::waitKey();
+//
+//											bool obstacle_in_way = false ;
+//
+//											if( RM_obstacles_check.at<unsigned char>(m,n)== 0 )
+//												{
+//													obstacle_in_way = true;
+//												}
+//*/
+											if(res_points.accessibility_flags[0])
 												{
 													Pixel_Point_next.x = n;
 													Pixel_Point_next.y = m;
@@ -888,38 +909,61 @@ cv::Mat Exploration::Room_Inspection( cv::Mat RI,
 										 Obstacle_free_Point( Room_Inspection_RI , m , n )
 										)
 										{
-											bool obstacle_in_way = false ;
+//											bool obstacle_in_way = false ;
+//
+//											for (unsigned int i = 0 ; i < Inflation_data_X.size() ; i++ )
+//												{
+//													if( std::abs( ( ( (n*map_resolution_)+map_origin_.x) - Inflation_data_X[i] ) ) < 0.1 &&
+//														std::abs( ( ( (m*map_resolution_)+map_origin_.y) - Inflation_data_Y[i] ) ) < 0.1 )
+//														{
+//															obstacle_in_way = true ;
+//														}
+//												}
+///*
+//											//boost::mutex::scoped_lock lock(mutex_inflation_topic_);
+//											//boost::system_time const timeout=boost::get_system_time() + boost::posix_time::milliseconds(5000);
+//
+//											cv::Mat RM_obstacles_check = RI.clone();
+//
+//											for( unsigned int idx = 0; idx < Inflation_data_X.size(); idx++ )
+//												{
+//													RM_obstacles_check.at<unsigned char>( (Inflation_data_Y[idx]- map_origin_.y)/map_resolution_ , (Inflation_data_X[idx]- map_origin_.x)/map_resolution_ ) = 0;
+//												}
+//
+//											cv::imshow("Inflated Map", RM_obstacles_check );
+//											cv::waitKey();
+//
+//											bool obstacle_in_way = false ;
+//
+//											if( RM_obstacles_check.at<unsigned char>(m,n)== 0 )
+//												{
+//													obstacle_in_way = true;
+//												}
+//*/
 
-											for (unsigned int i = 0 ; i < Inflation_data_X.size() ; i++ )
-												{
-													if( std::abs( ( ( (n*map_resolution_)+map_origin_.x) - Inflation_data_X[i] ) ) < 0.1 &&
-														std::abs( ( ( (m*map_resolution_)+map_origin_.y) - Inflation_data_Y[i] ) ) < 0.1 )
-														{
-															obstacle_in_way = true ;
-														}
-												}
-/*
-											//boost::mutex::scoped_lock lock(mutex_inflation_topic_);
-											//boost::system_time const timeout=boost::get_system_time() + boost::posix_time::milliseconds(5000);
+											cob_map_accessibility_analysis::CheckPointAccessibility::Request req_points;
+											cob_map_accessibility_analysis::CheckPointAccessibility::Response res_points;
+											std::string points_service_name = "/map_accessibility_analysis/map_points_accessibility_check";
 
-											cv::Mat RM_obstacles_check = RI.clone();
+											geometry_msgs::Pose2D point;
+											point.x = (n*map_resolution_)+map_origin_.x;
+											point.y = (m*map_resolution_)+map_origin_.y;
+											req_points.points_to_check.push_back(point);
 
-											for( unsigned int idx = 0; idx < Inflation_data_X.size(); idx++ )
-												{
-													RM_obstacles_check.at<unsigned char>( (Inflation_data_Y[idx]- map_origin_.y)/map_resolution_ , (Inflation_data_X[idx]- map_origin_.x)/map_resolution_ ) = 0;
-												}
+											// this calls the service server to process our request message and put the result into the response message
+											// this call is blocking, i.e. this program will not proceed until the service server sends the response
+											bool success = ros::service::call(points_service_name, req_points, res_points);
 
-											cv::imshow("Inflated Map", RM_obstacles_check );
-											cv::waitKey();
+											if (success == true)
+											{
+												printf("Points request successful, results:\n");
+												for (unsigned int i=0; i<res_points.accessibility_flags.size(); ++i)
+													printf(" - (xy)=(%f, %f), accessible=%d\n", req_points.points_to_check[i].x, req_points.points_to_check[i].y, res_points.accessibility_flags[i]);
+											}
+											else
+												std::cout << "The service call for points was not successful.\n" << std::endl;
 
-											bool obstacle_in_way = false ;
-
-											if( RM_obstacles_check.at<unsigned char>(m,n)== 0 )
-												{
-													obstacle_in_way = true;
-												}
-*/
-											if(!obstacle_in_way)
+											if(res_points.accessibility_flags[0])
 												{
 													Pixel_Point_next.x = n;
 													Pixel_Point_next.y = m;

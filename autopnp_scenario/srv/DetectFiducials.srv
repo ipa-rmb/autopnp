@@ -1,0 +1,5 @@
+#request
+string tag_name
+---
+#response
+geometry_msgs/PoseStamped waste_bin_location
