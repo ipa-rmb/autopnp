@@ -1,0 +1,65 @@
+#Instruction about running autopnp_scenario software in simulation------------>
+
+*Launch the following launch files which is necessary to run autopnp_scenario software
+and other small software from autopnp_scenario package-->
+1. roscore
+2. roslaunch cob_bringup_sim robot.launch
+3. roslaunch cob_bringup dashboard.launch
+4. roslaunch cob_navigation_global 2dnav_ros_dwa.launch
+5. roslaunch cob_bringup rviz.launch
+6. To view the smach viewer->
+   rosrun smach_viewer smach_viewer
+7. To spawn dynamic objects->
+   rosrun cob_bringup_sim spawn_object.py OBJECT_NAME1 OBJECT_NAME2 OBJECT_NAME3 ...
+
+*To run autopnp_software launch the following-->
+1. roslaunch autopnp_scenario exploration.launch
+2. To run only the exploration Algorithm->
+   rosrun autopnp_scenario exploration_smach.py
+3. To run the whole autopnp project->
+   rosrun autopnp_scenario exploration_detection_cleaning.py
+   
+*To run map segmentation software->
+1. first launch server->
+   roslaunch autopnp_scenario map_segmentation_action_server.launch
+2. Then launch client->
+   rosrun autopnp_scenario map_segmentation_action_client
+   or 
+   rosrun autopnp_scenario map_segmentation_action_client.py
+   
+*To run Trash Bin Detection software->
+1. roslaunch openni2_launch openni2.launch camera:=cam3d
+2. roslaunch autopnp_scenario fiducials.launch
+3. roslaunch autopnp_scenario trash_bin_detection_service_server.launch
+4. rosrun autopnp_scenario activate_trash_bin_detection_client
+   or 
+   rosrun autopnp_scenario trash_bin_detection_on_client.py
+5. rosrun autopnp_scenario deactivate_trash_bin_detection_client
+   or 
+   rosrun autopnp_scenario trash_bin_detection_off_client.py
+6. To only get data from fiducials topic run->
+   rosrun autopnp_scenario detect_fiducials_client.py
+   
+   
+#Instruction about running autopnp_scenario software in real robot------------>
+
+*Launch the following launch files which is necessary to run autopnp_scenario software
+and other small software from autopnp_scenario package-->
+1. roscore
+2. roslaunch cob_bringup robot.launch
+3. roslaunch cob_bringup dashboard.launch
+4. roslaunch cob_bringup rviz.launch
+
+*To run autopnp_scenario software launch the following-->
+1. roslaunch autopnp_scenario autopnp_navigation.launch
+1. roslaunch autopnp_scenario autopnp_scenario.launch 
+2. To run only the exploration Algorithm->
+   rosrun autopnp_scenario exploration_smach.py
+3. To run the whole autopnp project->
+   rosrun autopnp_scenario exploration_detection_cleaning.py
+   
+   
+# Output of the autopnp_scenario software->
+is given here-----------https://github.com/muin028/Exploration_Algorithm_results
+
+related video is here----------https://www.youtube.com/playlist?list=PLgnw6U2fYFrY2HFu1vSsD9t6zyhP8Gt77&feature=mh_lolz

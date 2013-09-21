@@ -119,6 +119,9 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/ros/include
 #rosbuild_add_executable(map_point_accessibility_check_server ros/src/map_point_accessibility_check_server.cpp)
 #rosbuild_add_executable(map_point_accessibility_check_client ros/src/map_point_accessibility_check_client.cpp)
 
+			#detect fiducials service server		
+#rosbuild_add_executable(detect_fiducials_service_server ros/src/detect_fiducials_service_server.cpp)
+
 			#map segmentation action server and client
 rosbuild_add_executable(map_segmentation_action_server ros/src/map_segmentation_action_server.cpp)
 
@@ -147,6 +150,4 @@ rosbuild_add_executable(activate_trash_bin_detection_client ros/src/activate_tra
 			#Deactivate Trash Bin Detection Client 		
 rosbuild_add_executable(deactivate_trash_bin_detection_client ros/src/deactivate_trash_bin_detection_client.cpp)
 
-			#detect fiducials service server		
-rosbuild_add_executable(detect_fiducials_service_server ros/src/detect_fiducials_service_server.cpp)
 

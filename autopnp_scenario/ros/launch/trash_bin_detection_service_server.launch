@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+  <include file="$(find autopnp_scenario)/ros/launch/fiducials/fiducials.launch"/>
+
+  <node pkg="autopnp_scenario" type="trash_bin_detection_service_server" name="trash_bin_detection_server" output="screen"/>	
+  
+  <node pkg="tf" type="static_transform_publisher" name="cam3d_broadcaster" args="0 0 0 0 -1.570796327 1.570796327 head_cam3d_link cam3d_link 100" />
+
+</launch>
